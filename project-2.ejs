@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- CSS. -->
+    <link rel="stylesheet" href="../public/css/project-2.css"/>
+    <link rel="stylesheet" href="../public/index/css/fontawesome-all.min.css"/>
+
+    <!-- JavaScript. -->
+    <script src="../../public/index/js/jquery.min.js"></script>
+    
+    <title>Project: Register - Tyree's Portfolio</title>
+</head>
+
+<body>
+
+<!-- Container for the project. -->
+<div class="container-2">
+
+    <!-- The parallax image. -->
+    <div class="background-image">
+
+        <!-- The container box for the "about" text box that replaces the "register" form. -->
+        <div id="about-this-project" class="about-text-box">
+            <div class="about-container">
+                <h2 class="h-about-heading">About</h2>
+                <p>
+                    This project was made using HTML, CSS, and JavaScript (front-end and Node.js for back-end) with a little bit of jQuery.
+                    <br>
+                    <br>
+                    This was a personal project for my portfolio to demonstrate a register page with real-time validation and dynamic
+                    JavaScript text injection depending on if the user accepted the Terms and Privacy.
+                    <br>
+                    <br>
+                    I completed this project in September of 2019.
+                    <br>
+                    <br>
+                    Additional features include the ability to show/hide the password input field and when the register button is clicked
+                    with valid information (also with the Terms and Privacy checked), the password gets bcrypted. Show the password once
+                    registration is successful.
+                </p>
+            </div>
+        </div>
+
+        <!-- The register form. -->
+        <div class="register-get-form">
+            <form action="/project-register-validation#POST-request" method="POST" name="form">
+                <h2 id="h-register">Register</h2>
+
+                <!-- The email section for the form. -->
+                <div class="email">
+                    <h3 id="h-email-address">Email Address<%= emailEntered %></h3>
+                    <input type="text" name="email" id="email" class="email-input" maxlength="30" value="<%= email %>">
+                    <div class="email-error">
+                        <h4 id="h-address-error-validate" class="h-address-error">&nbsp;</h4>
+                    </div>
+                </div>
+
+                <!-- The password section for the form. -->
+                <div class="password">
+                    <h3 id="h-password">Password<%= passwordBcrypt %></h3>
+                    <div class="password-flex">
+                        <input type="password" name="password" id="password" class="password-input" value="<%= password %>" maxlength="16">
+                        <i id="show-hide-password" class="fas fa-eye-slash"></i>
+                    </div>
+                    <div class="password-error">
+                        <h4 id="h-password-error-validate" class="h-password-error">&nbsp;</h4>
+                    </div>
+                </div>
+
+                <!-- A "remember me" checkbox to save the user's credentials. -->
+                <div class="remember-terms">
+                    <div class="remember-flex">
+                        <input type="checkbox" name="remember-me">
+                        <h5>Remember Me</h5>
+                    </div>
+
+                    <!-- A "Terms of Service" and "Privacy Policy" checkbox that the user must check before proceeding. -->
+                    <div class="terms-privacy-flex">
+                        <input type="checkbox" name="terms-privacy" id="accept-terms-privacy">
+                        <h5>I accept the <a href="#terms-of-service.html">Terms of Service</a>
+                        and <a href="#privacy-policy.html">Privacy Policy</a></h5>
+                    </div>
+                </div>
+
+                <!-- The submit button to register. -->
+                <div id="register" class="button-submit">
+                    <button type="submit" id="button-register-enable-disable" class="button-register" disabled>
+                        <h3 id="h-button-register">Register</h3>
+                    </button>
+                </div>
+
+                <!-- If the user already has an account, they can click this link to redirect to the login page (if it existed
+                     in this project). -->
+                <div class="login">
+                    <h3>Already have an account? <a href="#login.html">Login</a></h3>
+                </div>
+            </form>
+            <!-- End of register form. -->
+        </div>
+        <div class="bottom-buttons">
+
+            <!-- Button to redirect to the Github repository of the source code. -->
+            <div class="view-code">
+                <a href="#"><h4 id="h-view-code">CODE</h4></a>
+            </div>
+
+            <!-- The about button to show/hide the about message box on mouseover. -->
+            <div id="about" class="about-button">
+                <h4 class="h-about">ABOUT</h4>
+            </div>
+
+            <!-- Reset the form (make a GET request). -->
+            <div class="reset">
+                <a href="/project-register-validation"><h4 id="h-reset">RESET</h4></a>
+            </div>
+
+            <!-- Redirect back to the portfolio. -->
+            <div class="back-to-portfolio">
+                <a href="/"><h4 id="h-back-to-portfolio">PORTFOLIO</h4></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+
+    // Focus the "email" input field on page load/refresh.
+    document.getElementById("email").focus();
+
+    // Creating an event listener for the show/hide password functionality.
+    document.getElementById("show-hide-password").addEventListener("click", showHide);
+
+    // Variables for manipulating the password visibility.
+    let showHidePassword = document.getElementById("show-hide-password");
+    let passwordVisibility = document.getElementById("password");
+
+    // Function to show/hide the visibility of the password input field.
+    function showHide() {
+
+        // Onclick, if the input type is "password" change the input type to text.
+    if (passwordVisibility.type === "password") {
+
+    showHidePassword.className = showHidePassword.className.replace(/fas fa-eye-slash/, "fas fa-eye");
+    passwordVisibility.type = "text";
+
+    // Onclick, if the input type is "text" change the input type to password.
+    } else if (passwordVisibility.type === "text") {
+    
+        showHidePassword.className = showHidePassword.className.replace(/fas fa-eye/, "fas fa-eye-slash");
+        passwordVisibility.type = "password";
+
+        };
+    };
+
+    // Enable/disable the register button if "Terms of Service" and "Privacy Policy" have not been accepted.
+    document.getElementById("register").addEventListener("mouseover", mouseOver);
+    document.getElementById("register").addEventListener("mouseout", mouseOut);
+   
+    let acceptTermsAndPrivacy = document.getElementById("accept-terms-privacy");
+    let registerText = document.getElementById("h-button-register");
+
+    // This variable will be used to enable/disable the "Register" button.
+    let buttonEnableDisable = document.getElementById("button-register-enable-disable");
+
+    function mouseOver() {
+
+        // If the email address is invalid on hover, display error message.
+        if (validatePassword() === false) {
+            registerText.innerText = "Please enter a valid password";
+        }
+
+        if (validate() === false) {
+            registerText.innerText = "Please enter a valid email address";
+        };
+
+        // If the Terms and Privacy checkbox is not checked.
+        if (acceptTermsAndPrivacy.checked == false) {
+            buttonEnableDisable.disabled = true;
+            registerText.innerText = "You must accept the Terms of Use and Privacy Policy";
+
+        // If the Terms and Privacy checkbox is checked.
+        } else if (acceptTermsAndPrivacy.checked == true) {
+            buttonEnableDisable.disabled = false;
+
+            // These two function calls will prevent the user from bypassing the input fields and registering with no
+            // email and/or password.
+            validate();
+            validatePassword();
+        };
+    };
+
+    // On mouseout of the "Register" button, change the text back to "Register."
+    function mouseOut() {
+   
+        registerText.innerText = "Register";
+      
+    };
+
+    // Validation.
+
+    // Email Validation.
+    function validateEmail(email) {
+
+        // Retrieved from: https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    };
+
+    // Setting an event listener for the "email" input field on keyup.
+    // This enables real-time validation without having to submit (POST) every time.
+    $("#email").on("keyup", validate);
+
+    // Function to validate the Email Address.
+    function validate() {
+        let $result = $("#h-address-error-validate");
+        let email = $("#email").val();
+        let emailTrim = document.getElementById("email").value.trim();
+        let emailLength = emailTrim.length;
+
+        $result.text("");
+
+        if (validateEmail(email)) {
+
+            // If the email address is valid,
+            // display as valid.
+            $result.text(email + " is valid");
+            $result.css("color", "green");
+            buttonEnableDisable.disabled = false;
+            return true;
+
+        } else {
+
+            // If the email address input field is empty,
+            // display as invalid and display error message.
+            if (emailTrim === "") {
+            $result.text("Email cannot be empty");
+            $result.css("color", "red");
+            buttonEnableDisable.disabled = true;
+            return false;
+            };
+
+        // If the email address is invalid,
+        // display as invalid and display error message.
+        $result.text(email + " is not a valid email");
+        $result.css("color", "red");
+        buttonEnableDisable.disabled = true;
+        };
+        return false;
+    };
+
+    // Validating the password field.
+
+    // Event listener for the password input field.
+    $("#password").on("keyup", validatePassword);
+
+    let errorText = $("#h-password-error-validate");
+
+    // Function to validate the password.
+    function validatePassword() {
+    let passwordTrim = document.getElementById("password").value.trim();
+    let passwordLength = passwordTrim.length;
+    let password = $("#password").val();
+
+        // If the password input field is empty.
+        if (passwordTrim === "") {
+
+            errorText.text("Password cannot be empty");
+            errorText.css("color", "red");
+            buttonEnableDisable.disabled = true;
+            return false;
+
+        // If the password entered is less than 8 or greater than 16 characters,
+        // display as invalid with an error message.
+        } else if (passwordLength < 8 || passwordLength > 16) {
+
+            errorText.text("Password must be between 8 - 16 characters");
+            errorText.css("color", "red");
+            buttonEnableDisable.disabled = true;
+            return false;
+
+        } else {
+            // If the password is valid,
+            // display as valid.
+            errorText.text("Password is valid");
+            errorText.css("color", "green");
+            buttonEnableDisable.disabled = false;
+            return true;
+        };
+    };
+
+    // Event listeners to display the "About this project" information.
+    document.getElementById("about").addEventListener("mouseover", showAbout);
+    document.getElementById("about").addEventListener("mouseout", hideAbout);
+
+    // DOM element that displays the "about" information.
+    let showMessage = document.getElementById("about-this-project");
+
+    // Show the "about" block.
+    function showAbout() {
+
+        showMessage.style.display = "block";
+    };
+
+    // Show the "about" block.
+    function hideAbout() {
+
+        showMessage.style.display = "none";
+    };
+
+});
+</script>
+
+</body>
+
+</html>
